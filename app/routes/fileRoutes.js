@@ -1,6 +1,6 @@
 // app/routes/fileRoutes.js
 import express from 'express';
-import { uploadFile, downloadFile } from '../controllers/fileController.js';
+import { uploadFile, downloadFile, listFiles } from '../controllers/fileController.js';
 import multer from 'multer';
 import path from 'path';
 
@@ -23,5 +23,7 @@ router.post('/upload', upload.single('file'), uploadFile);
 
 // Route to download a file
 router.get('/download/:filename', downloadFile);
+
+router.get('/list', listFiles);
 
 export default router;
