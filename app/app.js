@@ -7,8 +7,8 @@ import cors from 'cors';
 const app = express();
 
 app.use(cors({
-    origin: 'http://localhost:3000', // Only allow requests from the React frontend
-    methods: ['GET', 'POST', 'OPTIONS'], // Allowed methods
+    origin: '*', // Only allow requests from the React frontend
+    methods: ['GET', 'POST', 'OPTIONS', 'DELETE'], // Allowed methods
     allowedHeaders: ['Content-Type', 'Authorization'] // Allowed headers
 }));
 
@@ -20,6 +20,6 @@ app.use('/', routes);
 
 app.use('/uploads', express.static(path.resolve('uploads')));
 
-app.options('/files/upload', cors());
+// app.options('/files/upload', cors());
 
 export default app;

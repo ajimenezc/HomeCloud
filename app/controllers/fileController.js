@@ -39,3 +39,20 @@ export const listFiles = (req, res) => {
         res.status(200).json(files);
     });
 }
+
+export const deleteFile = (req, res) => {
+    const { filename } = req.params;
+    const filePath = path.resolve('uploads', filename);
+
+    // Check if the file exists
+    if (fs.existsSync(filePath)) {
+        fs.unlink(filePath, (err) => {
+            if (err) {
+                return res.status(500).json({ error: 'Error deleting the file.' });
+            }
+            res.status(200).json({ message: 'File deleted successfully.' });
+        });
+    } else {
+        res.status(404).json({ error: 'File not found.' });
+    }
+};

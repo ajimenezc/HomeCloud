@@ -1,0 +1,99 @@
+.container {
+    max-width: 600px;
+    margin: auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
+  }
+  
+  .header {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .fileInput {
+    display: block;
+    font-size: 16px;
+  }
+  
+  .button {
+    background-color: #007bff;
+    color: white;
+    border: none;
+    padding: 10px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+  }
+  
+  .button:hover {
+    background-color: #0056b3;
+  }
+  
+  .iconButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    color: #007bff;
+    margin-left: 10px;
+    display: inline-flex;
+    align-items: center; /* Align icon with text */
+    justify-content: center;
+  }
+  
+  .iconButton:hover {
+    color: #0056b3;
+  }
+  
+  .deleteButton {
+    color: #ff4d4d;
+  }
+  
+  .deleteButton:hover {
+    color: #ff1a1a;
+  }
+  
+  
+  .successMessage {
+    color: green;
+    text-align: center;
+  }
+  
+  .errorMessage {
+    color: red;
+    text-align: center;
+  }
+  
+  .fileList {
+    list-style-type: none;
+    padding: 0;
+  }
+  
+  .fileItem {
+    display: flex; /* Flexbox layout */
+    justify-content: space-between; /* Space between file name and buttons */
+    align-items: center; /* Vertical alignment */
+    padding: 10px;
+    border-bottom: 1px solid #ccc;
+  }
+  
+  .fileItem span {
+    flex-grow: 1; /* Allow file name to take up remaining space */
+    text-align: left;
+  }
+  
+  .fileItem:last-child {
+    border-bottom: none;
+  }

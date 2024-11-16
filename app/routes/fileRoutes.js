@@ -1,6 +1,6 @@
 // app/routes/fileRoutes.js
 import express from 'express';
-import { uploadFile, downloadFile, listFiles } from '../controllers/fileController.js';
+import { uploadFile, downloadFile, listFiles, deleteFile } from '../controllers/fileController.js';
 import multer from 'multer';
 import path from 'path';
 
@@ -25,5 +25,7 @@ router.post('/upload', upload.single('file'), uploadFile);
 router.get('/download/:filename', downloadFile);
 
 router.get('/list', listFiles);
+
+router.delete('/delete/:filename', deleteFile);
 
 export default router;
