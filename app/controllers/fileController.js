@@ -1,48 +1,87 @@
 // app/controllers/fileController.js
 import path from 'path';
 import fs from 'fs';
+import { getFilePath, getUploadsDirectory } from '../utils.js';
+import { joinPaths } from '../utils.js';
+
+
 
 // Handle file upload
-export const uploadFile = (req, res) => {
-    if (!req.file) {
-        return res.status(400).send('No file uploaded.');
+export const uploadFiles = (req, res) => {
+    if (!req.files || req.files.length === 0) {
+      return res.status(400).json({ error: 'No files uploaded.' });
     }
-    res.status(200).send({
-        message: 'File uploaded successfully.',
-        filename: req.file.filename
+  
+    const fileNames = req.files.map((file) => file.filename);
+    res.status(200).json({
+      message: `${fileNames.length} files uploaded successfully.`,
+      files: fileNames,
     });
-};
+  };
+  
 
 // Handle file download
 export const downloadFile = (req, res) => {
     const { filename } = req.params;
-    const filePath = path.resolve('uploads', filename);
+    const filePath = getFilePath(filename);
 
     // Check if file exists
     if (!fs.existsSync(filePath)) {
+        console.error(`File not found: ${filePath}`);
         return res.status(404).send('File not found.');
     }
 
-    res.download(filePath, filename, (err) => {
+    // Attempt to send the file
+    res.download(filePath, (err) => {
         if (err) {
-            res.status(500).send('Error downloading the file.');
+            if (err.code === 'ECONNRESET' || err.code === 'EPIPE') {
+                // Suppress expected errors when the client aborts the connection
+                // console.debug(`Download aborted by client: ${filename}`);
+            } else {
+                console.error(`Error downloading file: ${err.message}`);
+                if (!res.headersSent) {
+                    res.status(500).send('Error downloading the file.');
+                }
+            }
         }
     });
+    
 };
 
 export const listFiles = (req, res) => {
-    const uploadsDir = path.resolve('uploads');
-    fs.readdir(uploadsDir, (err, files) => {
-        if (err) {
-            return res.status(500).send('Error reading files from the server.');
-        }
-        res.status(200).json(files);
-    });
-}
+    const uploadsDir = getUploadsDirectory(); // Use your utility function
+    const getDirectoryTree = (dirPath) => {
+        const items = fs.readdirSync(dirPath);
+        return items.map((item) => {
+            const fullPath = joinPaths(dirPath, item);
+            const stats = fs.statSync(fullPath);
+            if (stats.isDirectory()) {
+                return {
+                    name: item,
+                    type: 'directory',
+                    children: getDirectoryTree(fullPath)
+                };
+            } else {
+                return {
+                    name: item,
+                    type: 'file'
+                };
+            }
+        });
+    };
+
+    try {
+        const tree = getDirectoryTree(uploadsDir);
+        res.status(200).json(tree);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Error reading files from the server.' });
+    }
+};
 
 export const deleteFile = (req, res) => {
     const { filename } = req.params;
-    const filePath = path.resolve('uploads', filename);
+    const filePath = getFilePath(filename)
 
     // Check if the file exists
     if (fs.existsSync(filePath)) {
@@ -56,3 +95,40 @@ export const deleteFile = (req, res) => {
         res.status(404).json({ error: 'File not found.' });
     }
 };
+
+// Create a new folder
+export const createFolder = (req, res) => {
+    const { folderPath } = req.body; // Relative path from the uploads directory
+    const newFolderPath = joinPaths(getUploadsDirectory(), folderPath);
+
+    if (fs.existsSync(newFolderPath)) {
+        return res.status(400).json({ error: 'Folder already exists.' });
+    }
+
+    fs.mkdir(newFolderPath, { recursive: true }, (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Error creating folder.' });
+        }
+        res.status(200).json({ message: 'Folder created successfully.' });
+    });
+};
+
+// Delete a folder
+export const deleteFolder = (req, res) => {
+    const { folderPath } = req.body; // Relative path from the uploads directory
+    const folderToDelete = joinPaths(getUploadsDirectory(), folderPath);
+
+    if (!fs.existsSync(folderToDelete)) {
+        return res.status(404).json({ error: 'Folder not found.' });
+    }
+
+    fs.rmdir(folderToDelete, { recursive: true }, (err) => {
+        if (err) {
+            console.error(err);
+            return res.status(500).json({ error: 'Error deleting folder.' });
+        }
+        res.status(200).json({ message: 'Folder deleted successfully.' });
+    });
+};
+

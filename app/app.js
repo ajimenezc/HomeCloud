@@ -3,7 +3,9 @@ import express from 'express';
 import routes from './routes/index.js';
 import path from 'path';
 import cors from 'cors';
-
+import { getUploadsDirectory } from './utils.js';
+console.log('UPLOAD_PATH:', getUploadsDirectory());
+// prints UPLOAD_PATH: /Users/andresjimenezcuenca/uploads
 const app = express();
 
 app.use(cors({
@@ -18,7 +20,7 @@ app.use(express.json());
 // Set up routes
 app.use('/', routes);
 
-app.use('/uploads', express.static(path.resolve('uploads')));
+app.use('/uploads', express.static(getUploadsDirectory()));
 
 // app.options('/files/upload', cors());
 

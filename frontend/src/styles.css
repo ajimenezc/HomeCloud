@@ -1,15 +1,24 @@
+/* General Container Styling */
 .container {
-    max-width: 600px;
-    margin: auto;
+    max-width: 800px;
+    margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
   }
   
+  /* Header Styling */
   .header {
     text-align: center;
     margin-bottom: 20px;
+    color: #333;
+    font-size: 1.8rem;
+    font-weight: bold;
   }
   
+  /* Form Styling */
   .form {
     display: flex;
     justify-content: center;
@@ -18,16 +27,24 @@
     margin-bottom: 20px;
   }
   
+  .folderInput,
   .fileInput {
-    display: block;
     font-size: 16px;
+    padding: 8px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    flex-grow: 1;
+  }
+  
+  .folderInput::placeholder {
+    color: #aaa;
   }
   
   .button {
     background-color: #007bff;
     color: white;
     border: none;
-    padding: 10px 15px;
+    padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
     font-size: 16px;
@@ -41,15 +58,109 @@
     background-color: #0056b3;
   }
   
+  /* Progress Bar Styling */
+  .progressBarContainer {
+    width: 100%;
+    margin: 10px 0;
+  }
+  
+  .progressBar {
+    width: 100%;
+    height: 10px;
+    background-color: #e0e0e0;
+    border-radius: 5px;
+    overflow: hidden;
+  }
+  
+  .progressFill {
+    height: 100%;
+    background-color: #007bff;
+    transition: width 0.2s ease;
+  }
+  
+  /* Messages */
+  .successMessage {
+    color: green;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  .errorMessage {
+    color: red;
+    text-align: center;
+    margin-bottom: 10px;
+  }
+  
+  /* File Tree Styling */
+  .fileList {
+    list-style-type: none;
+    padding-left: 20px;
+    margin: 0;
+  }
+  
+  .fileItem {
+    margin-bottom: 10px;
+  }
+  
+  .folderBlock,
+  .previewBlock {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .folderBlock {
+    color: #f4b400; /* Gold for folders */
+  }
+  
+  .folderName {
+    cursor: pointer;
+    font-weight: bold;
+    color: #333;
+  }
+  
+  .folderName:hover {
+    text-decoration: underline;
+  }
+  
+  .fileIcon {
+    font-size: 24px;
+    color: #007bff;
+  }
+  
+  .filePreview {
+    width: 40px;
+    height: 40px;
+    object-fit: cover;
+    border-radius: 5px;
+    border: 1px solid #ddd;
+  }
+  
+  .textBlock {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+  }
+  
+  .fileName {
+    font-size: 14px;
+    color: #555;
+  }
+  
+  .actionButtons {
+    display: flex;
+    gap: 10px;
+    margin-top: 5px;
+  }
+  
   .iconButton {
     background: none;
     border: none;
     cursor: pointer;
     font-size: 16px;
     color: #007bff;
-    margin-left: 10px;
-    display: inline-flex;
-    align-items: center; /* Align icon with text */
+    display: flex;
+    align-items: center;
     justify-content: center;
   }
   
@@ -65,35 +176,3 @@
     color: #ff1a1a;
   }
   
-  
-  .successMessage {
-    color: green;
-    text-align: center;
-  }
-  
-  .errorMessage {
-    color: red;
-    text-align: center;
-  }
-  
-  .fileList {
-    list-style-type: none;
-    padding: 0;
-  }
-  
-  .fileItem {
-    display: flex; /* Flexbox layout */
-    justify-content: space-between; /* Space between file name and buttons */
-    align-items: center; /* Vertical alignment */
-    padding: 10px;
-    border-bottom: 1px solid #ccc;
-  }
-  
-  .fileItem span {
-    flex-grow: 1; /* Allow file name to take up remaining space */
-    text-align: left;
-  }
-  
-  .fileItem:last-child {
-    border-bottom: none;
-  }

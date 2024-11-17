@@ -1,130 +1,203 @@
 import React, { useState, useEffect } from 'react';
+import { faFolderPlus, faUpload } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faUpload, faDownload, faTrash } from '@fortawesome/free-solid-svg-icons';
-import './styles.css'; // Import your CSS file
+import FileTree from './FileTree'; 
+import { joinPaths } from './utils.js';
+import './styles.css'
+
 
 const FileUpload = () => {
-  const [message, setMessage] = useState('');
-  const [error, setError] = useState('');
-  const [files, setFiles] = useState([]);
+    const [message, setMessage] = useState('');
+    const [error, setError] = useState('');
+    const [fileTree, setFileTree] = useState([]);
+    const [newFolderName, setNewFolderName] = useState('');
+    const [currentFolderPath, setCurrentFolderPath] = useState('');
+    const [uploadProgress, setUploadProgress] = useState(0);
 
-  // Fetch the list of files in the uploads folder
-  const fetchFiles = async () => {
-    try {
-      const response = await fetch('http://192.168.1.37:3001/files/list');
-      if (!response.ok) {
-        throw new Error('Failed to fetch files');
-      }
-      const result = await response.json();
-      setFiles(result);
-    } catch (err) {
-      console.error(err);
-      setError('Error fetching file list');
-    }
-  };
+    // Fetch files when the component mounts
+    useEffect(() => {
+        fetchFiles();
+    }, []);
 
-  // Handle file upload
-  const handleFileUpload = async (event) => {
-    event.preventDefault();
-    const fileInput = event.target.file;
+    const fetchFiles = async () => {
+        try {
+            const response = await fetch('http://192.168.1.37:3001/files/list');
+            if (!response.ok) {
+                throw new Error('Failed to fetch files');
+            }
+            const result = await response.json();
+            setFileTree(result);
+        } catch (err) {
+            console.error(err);
+            setError('Error fetching file list');
+        }
+    };
 
-    if (!fileInput.files.length) {
-      setError('Please select a file to upload.');
-      setMessage('');
-      return;
-    }
+    const handleCreateFolder = async (event) => {
+        event.preventDefault();
+        try {
+            const response = await fetch('http://192.168.1.37:3001/files/create-folder', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    folderPath: joinPaths(currentFolderPath, newFolderName),
+                }),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to create folder');
+            }
+            setMessage('Folder created successfully.');
+            setNewFolderName('');
+            fetchFiles();
+        } catch (err) {
+            setError(err.message);
+        }
+    };
 
-    const formData = new FormData();
-    formData.append('file', fileInput.files[0]);
+    const handleFileUpload = async (event) => {
+        event.preventDefault();
+        const fileInput = event.target.querySelector('input[type="file"]');
 
-    try {
-      const response = await fetch('http://192.168.1.37:3001/files/upload', {
-        method: 'POST',
-        body: formData,
-      });
+        if (!fileInput.files.length) {
+            setError('Please select at least one file to upload.');
+            setMessage('');
+            return;
+        }
 
-      if (!response.ok) {
-        throw new Error('Failed to upload file');
-      }
+        const formData = new FormData();
+        for (const file of fileInput.files) {
+            formData.append('files', file);
+        }
+        formData.append('folderPath', currentFolderPath);
 
-      const result = await response.json();
-      setMessage(`File uploaded successfully: ${result.filename}`);
-      setError('');
-      fetchFiles(); // Refresh file list after upload
-    } catch (err) {
-      setError(err.message);
-      setMessage('');
-    }
-  };
+        const xhr = new XMLHttpRequest();
 
-   // Handle file deletion
-   const handleFileDelete = async (filename) => {
-    try {
-      const response = await fetch(`http://192.168.1.37:3001/files/delete/${filename}`, {
-        method: 'DELETE',
-      });
+        xhr.open('POST', 'http://192.168.1.37:3001/files/upload', true);
 
-      if (!response.ok) {
-        throw new Error('Failed to delete file');
-      }
+        // Track upload progress
+        xhr.upload.onprogress = (event) => {
+            if (event.lengthComputable) {
+                const percentComplete = Math.round((event.loaded / event.total) * 100);
+                setUploadProgress(percentComplete);
+            }
+        };
 
-      const result = await response.json();
-      setMessage(result.message);
-      setError('');
-      fetchFiles(); // Refresh file list after deletion
-    } catch (err) {
-      setError(err.message);
-      setMessage('');
-    }
-  };
+        xhr.onload = () => {
+            if (xhr.status === 200) {
+                const response = JSON.parse(xhr.responseText);
+                setMessage(`${response.files.length} files uploaded successfully.`);
+                setError('');
+                setUploadProgress(0);
+                fetchFiles();
+            } else {
+                setError('Failed to upload files');
+                setUploadProgress(0);
+            }
+        };
 
-  // Fetch files when the component mounts
-  useEffect(() => {
-    fetchFiles();
-  }, []);
+        xhr.onerror = () => {
+            setError('An error occurred during file upload.');
+            setUploadProgress(0);
+        };
 
-  // Fetch files when the component mounts
-  useEffect(() => {
-    fetchFiles();
-  }, []);
+        xhr.send(formData);
+    };
 
-  return (
-    <div className="container">
-      <h1 className="header">Upload a File</h1>
-      <form onSubmit={handleFileUpload} className="form">
-        <input type="file" name="file" className="fileInput" />
-        <button type="submit" className="button">
-          <FontAwesomeIcon icon={faUpload} /> {/* Upload Icon */}
-        </button>
-      </form>
-      {message && <p className="successMessage">{message}</p>}
-      {error && <p className="errorMessage">{error}</p>}
+    const handleFileDelete = async (filePath) => {
+        try {
+            const response = await fetch(`http://192.168.1.37:3001/files/delete/${filePath}`, {
+                method: 'DELETE',
+            });
 
-      <h2 className="header">Uploaded Files</h2>
-      {files.length > 0 ? (
-  <ul className="fileList">
-    {files.map((file) => (
-      <li key={file} className="fileItem">
-        <span>{file}</span>
-        <a
-          href={`http://192.168.1.37:3001/files/download/${file}`}
-          className="iconButton"
-        >
-          <FontAwesomeIcon icon={faDownload} />
-        </a>
-        <button
-          className="iconButton deleteButton"
-          onClick={() => handleFileDelete(file)}
-        >
-          <FontAwesomeIcon icon={faTrash} />
-        </button>
-      </li>
-    ))}
-  </ul>
-) : (
-  <p>No files uploaded yet.</p>
-)}
-    </div>
-  );
+            if (!response.ok) {
+                throw new Error('Failed to delete file');
+            }
+
+            const result = await response.json();
+            setMessage(result.message);
+            setError('');
+            fetchFiles();
+        } catch (err) {
+            setError(err.message);
+            setMessage('');
+        }
+    };
+
+    const handleDeleteFolder = async (folderPath) => {
+        try {
+            const response = await fetch('http://192.168.1.37:3001/files/delete-folder', {
+                method: 'DELETE',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({ folderPath }),
+            });
+            if (!response.ok) {
+                throw new Error('Failed to delete folder');
+            }
+            const result = await response.json();
+            setMessage(result.message);
+            setError('');
+            fetchFiles();
+        } catch (err) {
+            setError(err.message);
+        }
+    };
+
+    return (
+        <div className="container">
+            <h1 className="header">File Manager</h1>
+
+            <form onSubmit={handleCreateFolder} className="form">
+                <input
+                    type="text"
+                    value={newFolderName}
+                    onChange={(e) => setNewFolderName(e.target.value)}
+                    placeholder="New folder name"
+                    className="folderInput"
+                />
+                <button type="submit" className="button">
+                    <FontAwesomeIcon icon={faFolderPlus} />
+                </button>
+            </form>
+
+            <form onSubmit={handleFileUpload} className="form">
+                <input type="file" name="files" multiple className="fileInput" />
+                <button type="submit" className="button">
+                    <FontAwesomeIcon icon={faUpload} />
+                </button>
+            </form>
+
+            {/* Progress bar */}
+            <div className="progressBarContainer">
+                {uploadProgress > 0 && (
+                    <div className="progressBar">
+                        <div
+                            className="progressFill"
+                            style={{ width: `${uploadProgress}%` }}
+                        ></div>
+                    </div>
+                )}
+            </div>
+
+            {message && <p className="successMessage">{message}</p>}
+            {error && <p className="errorMessage">{error}</p>}
+
+            <h2 className="header">Files</h2>
+            {fileTree.length > 0 ? (
+                <FileTree
+                    tree={fileTree}
+                    currentPath=""
+                    handleFileDelete={handleFileDelete}
+                    handleDeleteFolder={handleDeleteFolder}
+                />
+            ) : (
+                <p>No files uploaded yet.</p>
+            )}
+        </div>
+    );
 };
+
 export default FileUpload;

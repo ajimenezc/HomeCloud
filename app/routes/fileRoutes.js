@@ -1,31 +1,49 @@
-// app/routes/fileRoutes.js
 import express from 'express';
-import { uploadFile, downloadFile, listFiles, deleteFile } from '../controllers/fileController.js';
 import multer from 'multer';
-import path from 'path';
+import { joinPaths } from '../utils.js';
+
+import fs from 'fs';
+import { uploadFiles, downloadFile, listFiles, deleteFile, createFolder, deleteFolder } from '../controllers/fileController.js';
+import { getUploadsDirectory } from '../utils.js';
 
 const router = express.Router();
 
-// Multer setup for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, path.resolve('uploads')); // Upload directory
+        const { folderPath } = req.body; // Relative path from the uploads directory
+        const uploadPath = folderPath
+            ? joinPaths(getUploadsDirectory(), folderPath)
+            : getUploadsDirectory();
+
+        // Ensure the directory exists
+        fs.mkdirSync(uploadPath, { recursive: true });
+
+        cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname); // Unique file name
-    }
+        cb(null, `${Date.now()}-${file.originalname}`);
+    },
 });
 
 const upload = multer({ storage });
 
-// Route to upload a file
-router.post('/upload', upload.single('file'), uploadFile);
+// Route to upload multiple files
+router.post('/upload', upload.array('files', 10), uploadFiles); // Accept up to 10 files
 
 // Route to download a file
 router.get('/download/:filename', downloadFile);
 
+// Route to list files
 router.get('/list', listFiles);
 
+// Route to delete a file
 router.delete('/delete/:filename', deleteFile);
+
+// Route to create a folder
+router.post('/create-folder', createFolder);
+
+// Route to delete a folder
+router.delete('/delete-folder', deleteFolder);
+
 
 export default router;
