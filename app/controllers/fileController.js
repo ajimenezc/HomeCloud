@@ -98,6 +98,7 @@ export const deleteFile = (req, res) => {
 
 // Create a new folder
 export const createFolder = (req, res) => {
+    console.log(req.body)
     const { folderPath } = req.body; // Relative path from the uploads directory
     const newFolderPath = joinPaths(getUploadsDirectory(), folderPath);
 

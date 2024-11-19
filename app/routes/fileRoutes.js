@@ -10,25 +10,27 @@ const router = express.Router();
 
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        const { folderPath } = req.body; // Relative path from the uploads directory
-        const uploadPath = folderPath
-            ? joinPaths(getUploadsDirectory(), folderPath)
-            : getUploadsDirectory();
-
-        // Ensure the directory exists
-        fs.mkdirSync(uploadPath, { recursive: true });
-
-        cb(null, uploadPath);
+      const folderPath = req.query.folderPath || ''; // Get folderPath from query parameters
+  
+      const uploadPath = folderPath
+        ? joinPaths(getUploadsDirectory(), folderPath)
+        : getUploadsDirectory();
+  
+      // Ensure the directory exists
+      fs.mkdirSync(uploadPath, { recursive: true });
+  
+      cb(null, uploadPath);
     },
     filename: (req, file, cb) => {
-        cb(null, `${Date.now()}-${file.originalname}`);
+      cb(null, `${Date.now()}-${file.originalname}`);
     },
-});
+  });
+  
 
 const upload = multer({ storage });
 
 // Route to upload multiple files
-router.post('/upload', upload.array('files', 10), uploadFiles); // Accept up to 10 files
+router.post('/upload', upload.any(), uploadFiles);
 
 // Route to download a file
 router.get('/download/:filename', downloadFile);

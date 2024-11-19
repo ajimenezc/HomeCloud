@@ -6,7 +6,7 @@
     font-family: Arial, sans-serif;
     background-color: #f9f9f9;
     border-radius: 10px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
   }
   
   /* Header Styling */
@@ -94,28 +94,53 @@
   /* File Tree Styling */
   .fileList {
     list-style-type: none;
-    padding-left: 20px;
+    padding-left: 0;
     margin: 0;
   }
   
   .fileItem {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
+    margin-left: 20px;
   }
   
   .folderBlock,
-  .previewBlock {
+  .previewBlock,
+  .textBlock {
     display: flex;
     align-items: center;
     gap: 10px;
+    padding: 5px;
   }
   
   .folderBlock {
-    color: #f4b400; /* Gold for folders */
+    cursor: pointer;
+    position: relative;
   }
   
+  .folderBlock:hover {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+  }
+  
+  /* Highlight Selected Folder */
+  .selectedFolder {
+    background-color: #d0e7ff; /* Changed to a more noticeable blue shade */
+    border-left: 5px solid #007bff; /* Added a blue left border */
+    border-radius: 5px;
+  }
+  
+  .selectedFolder .folderName {
+    font-weight: bold;
+    color: #007bff; /* Blue text color for selected folder name */
+  }
+  
+  .selectedFolder .folderIcon {
+    color: #007bff; /* Blue folder icon for selected folder */
+  }
+  
+  /* Folder Name Styling */
   .folderName {
     cursor: pointer;
-    font-weight: bold;
     color: #333;
   }
   
@@ -123,8 +148,55 @@
     text-decoration: underline;
   }
   
+  /* Collapse Button Styling */
+  .collapseButton {
+    background: none;
+    border: none;
+    cursor: pointer;
+    margin-right: 5px;
+    display: flex;
+    align-items: center;
+    padding: 0;
+  }
+  
+  .collapseButton:focus {
+    outline: none;
+  }
+  
+  .collapseButton svg {
+    width: 12px;
+    height: 12px;
+    color: #333;
+  }
+  
+  .collapseButton:hover svg {
+    color: #007bff;
+  }
+  
+  /* Folder Icon Styling */
+  .folderBlock .fa-folder,
+  .folderBlock .fa-folder-open {
+    color: #f4b400;
+    font-size: 18px;
+  }
+  
+  .folderIcon {
+    color: #f4b400;
+  }
+  
+  .folderBlock:hover .folderIcon {
+    color: #e0a800;
+  }
+  
+  /* Prevent child elements from triggering parent click */
+  .folderBlock .actionButtons,
+  .folderBlock .collapseButton {
+    pointer-events: all;
+  }
+  
+  /* File Icon and Preview Styling */
   .fileIcon {
-    font-size: 24px;
+    font-size: 18px;
     color: #007bff;
   }
   
@@ -136,10 +208,9 @@
     border: 1px solid #ddd;
   }
   
+  /* Text Block Styling */
   .textBlock {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
+    flex-grow: 1;
   }
   
   .fileName {
@@ -147,10 +218,11 @@
     color: #555;
   }
   
+  /* Action Buttons */
   .actionButtons {
     display: flex;
     gap: 10px;
-    margin-top: 5px;
+    margin-left: auto;
   }
   
   .iconButton {
@@ -168,11 +240,61 @@
     color: #0056b3;
   }
   
+  .iconButton:focus {
+    outline: none;
+  }
+  
   .deleteButton {
     color: #ff4d4d;
   }
   
   .deleteButton:hover {
     color: #ff1a1a;
+  }
+  
+  /* Adjustments for Nested Lists */
+  .fileList > .fileItem {
+    margin-left: 0;
+  }
+  
+  .fileList .fileList .fileItem {
+    margin-left: 20px;
+  }
+  
+  /* Optional: Highlighting the Hovered Item */
+  .fileItem:hover {
+    background-color: #f1f1f1;
+    border-radius: 5px;
+  }
+  
+  /* Adjusting the Font Awesome Icons */
+  .fa-file {
+    color: #007bff;
+    font-size: 18px;
+  }
+  
+  /* Media Queries for Responsiveness */
+  @media (max-width: 600px) {
+    .container {
+      padding: 15px;
+    }
+  
+    .folderInput,
+    .fileInput {
+      font-size: 14px;
+    }
+  
+    .button {
+      font-size: 14px;
+      padding: 6px 12px;
+    }
+  
+    .actionButtons {
+      gap: 5px;
+    }
+  
+    .iconButton {
+      font-size: 14px;
+    }
   }
   

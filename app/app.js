@@ -15,7 +15,10 @@ app.use(cors({
 }));
 
 // Middleware (if any) can be added here
-app.use(express.json());
+// app.use(express.json());
+app.use('/files/create-folder', express.json());
+app.use('/files/delete-folder', express.json());
+app.use('/files/delete/:filename', express.json());
 
 // Set up routes
 app.use('/', routes);

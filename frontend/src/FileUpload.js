@@ -11,7 +11,9 @@ const FileUpload = () => {
     const [error, setError] = useState('');
     const [fileTree, setFileTree] = useState([]);
     const [newFolderName, setNewFolderName] = useState('');
-    const [currentFolderPath, setCurrentFolderPath] = useState('');
+    const [currentFolderPath, setCurrentFolderPath] = useState(''); // Initialize to root
+    const [selectedFolderPath, setSelectedFolderPath] = useState(''); // For highlighting
+
     const [uploadProgress, setUploadProgress] = useState(0);
 
     // Fetch files when the component mounts
@@ -35,6 +37,7 @@ const FileUpload = () => {
 
     const handleCreateFolder = async (event) => {
         event.preventDefault();
+        console.log(joinPaths(currentFolderPath, newFolderName))
         try {
             const response = await fetch('http://192.168.1.37:3001/files/create-folder', {
                 method: 'POST',
@@ -59,22 +62,26 @@ const FileUpload = () => {
     const handleFileUpload = async (event) => {
         event.preventDefault();
         const fileInput = event.target.querySelector('input[type="file"]');
-
+      
         if (!fileInput.files.length) {
-            setError('Please select at least one file to upload.');
-            setMessage('');
-            return;
+          setError('Please select at least one file to upload.');
+          setMessage('');
+          return;
         }
-
+      
         const formData = new FormData();
         for (const file of fileInput.files) {
-            formData.append('files', file);
+          formData.append('files', file);
         }
-        formData.append('folderPath', currentFolderPath);
-
+      
         const xhr = new XMLHttpRequest();
-
-        xhr.open('POST', 'http://192.168.1.37:3001/files/upload', true);
+      
+        // Include folderPath in the query parameters
+        const uploadUrl = `http://192.168.1.37:3001/files/upload?folderPath=${encodeURIComponent(
+          currentFolderPath
+        )}`;
+      
+        xhr.open('POST', uploadUrl, true);
 
         // Track upload progress
         xhr.upload.onprogress = (event) => {
@@ -146,10 +153,17 @@ const FileUpload = () => {
         }
     };
 
+    const handleFolderSelect = (folderPath) => {
+        setCurrentFolderPath(folderPath);
+        setSelectedFolderPath(folderPath);
+      };
+
     return (
         <div className="container">
             <h1 className="header">File Manager</h1>
-
+            <div className="currentFolderPath">
+                <strong>Current Folder:</strong> {currentFolderPath || 'Root'}
+            </div>
             <form onSubmit={handleCreateFolder} className="form">
                 <input
                     type="text"
@@ -192,6 +206,8 @@ const FileUpload = () => {
                     currentPath=""
                     handleFileDelete={handleFileDelete}
                     handleDeleteFolder={handleDeleteFolder}
+                    onFolderSelect={handleFolderSelect}
+                    selectedFolderPath={selectedFolderPath}
                 />
             ) : (
                 <p>No files uploaded yet.</p>
