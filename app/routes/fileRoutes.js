@@ -39,7 +39,7 @@ router.get('/download/:filename', downloadFile);
 router.get('/list', listFiles);
 
 // Route to delete a file
-router.delete('/delete/:filename', deleteFile);
+router.delete('/delete/*', deleteFile);
 
 // Route to create a folder
 router.post('/create-folder', createFolder);

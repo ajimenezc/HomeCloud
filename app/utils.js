@@ -15,3 +15,11 @@ export default {
 };
 
 export const joinPaths = (...segments) => segments.filter(Boolean).join('/');
+
+import path from 'path';
+
+export const sanitizePath = (inputPath) => {
+    // Prevent directory traversal attacks by normalizing the path
+    const sanitizedPath = path.normalize(inputPath).replace(/^(\.\.(\/|\\|$))+/, '');
+    return sanitizedPath;
+};

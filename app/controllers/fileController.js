@@ -1,8 +1,7 @@
 // app/controllers/fileController.js
-import path from 'path';
 import fs from 'fs';
 import { getFilePath, getUploadsDirectory } from '../utils.js';
-import { joinPaths } from '../utils.js';
+import { joinPaths, sanitizePath } from '../utils.js';
 
 
 
@@ -80,8 +79,9 @@ export const listFiles = (req, res) => {
 };
 
 export const deleteFile = (req, res) => {
-    const { filename } = req.params;
-    const filePath = getFilePath(filename)
+    const filepath = req.params[0] || req.params.filepath; // Adjust based on your route
+    const sanitizedFilepath = sanitizePath(filepath);
+    const filePath = getFilePath(sanitizedFilepath);
 
     // Check if the file exists
     if (fs.existsSync(filePath)) {

@@ -1,6 +1,6 @@
 // Folder.js
 import React, { useState } from 'react';
-import FileTree from './FileTree';
+import FileItem from './FileItem';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faFolder,
@@ -18,56 +18,82 @@ const Folder = ({
   handleDeleteFolder,
   onFolderSelect,
   selectedFolderPath,
+  isRoot = false,
 }) => {
-  const [collapsed, setCollapsed] = useState(true);
-
-  const itemPath = joinPaths(currentPath, item.name);
+  const [collapsed, setCollapsed] = useState(isRoot ? false : true);
+  const itemPath = isRoot ? '' : joinPaths(currentPath, item.name);
 
   const toggleCollapse = (e) => {
-    e.stopPropagation(); // Prevent the click from bubbling up to the parent
+    e.stopPropagation();
     setCollapsed(!collapsed);
   };
 
   const handleFolderClick = () => {
     onFolderSelect(itemPath);
-    // Remove the following line if you don't want to auto-expand when a folder is selected
-    // setCollapsed(false);
   };
 
   const isSelected = selectedFolderPath === itemPath;
 
   return (
-    <li key={itemPath} className="fileItem">
+    <li key={itemPath} className={`fileItem ${isRoot ? 'rootFolder' : ''}`}>
       <div
         className={`folderBlock ${isSelected ? 'selectedFolder' : ''}`}
         onClick={handleFolderClick}
       >
-        <button onClick={toggleCollapse} className="collapseButton">
-          <FontAwesomeIcon icon={collapsed ? faChevronRight : faChevronDown} />
-        </button>
-        <FontAwesomeIcon icon={collapsed ? faFolder : faFolderOpen} />
-        <span className="folderName">{item.name}</span>
-        <div className="actionButtons" onClick={(e) => e.stopPropagation()}>
-          <button
-            className="iconButton deleteButton"
-            onClick={(e) => {
-              e.stopPropagation();
-              handleDeleteFolder(itemPath);
-            }}
-          >
-            <FontAwesomeIcon icon={faTrash} />
+        {item.children && item.children.length > 0 && (
+          <button onClick={toggleCollapse} className="collapseButton">
+            <FontAwesomeIcon icon={collapsed ? faChevronRight : faChevronDown} />
           </button>
-        </div>
+        )}
+        <FontAwesomeIcon
+          icon={collapsed ? faFolder : faFolderOpen}
+          className="folderIcon"
+        />
+        <span className="folderName">{item.name}</span>
+        {!isRoot && (
+          <div className="actionButtons" onClick={(e) => e.stopPropagation()}>
+            <button
+              className="iconButton deleteButton"
+              onClick={(e) => {
+                e.stopPropagation();
+                handleDeleteFolder(itemPath);
+              }}
+            >
+              <FontAwesomeIcon icon={faTrash} />
+            </button>
+          </div>
+        )}
       </div>
       {!collapsed && (
-        <FileTree
-          tree={item.children}
-          currentPath={itemPath}
-          handleFileDelete={handleFileDelete}
-          handleDeleteFolder={handleDeleteFolder}
-          onFolderSelect={onFolderSelect}
-          selectedFolderPath={selectedFolderPath}
-        />
+        <ul className="fileList">
+          {item.children.map((childItem) => {
+            const childItemPath = joinPaths(itemPath, childItem.name);
+            if (childItem.name.startsWith('.')) {
+              return null; // Skip hidden files and folders
+            } else if (childItem.type === 'directory') {
+              return (
+                <Folder
+                  key={childItemPath}
+                  item={childItem}
+                  currentPath={itemPath}
+                  handleFileDelete={handleFileDelete}
+                  handleDeleteFolder={handleDeleteFolder}
+                  onFolderSelect={onFolderSelect}
+                  selectedFolderPath={selectedFolderPath}
+                />
+              );
+            } else {
+              return (
+                <FileItem
+                  key={childItemPath}
+                  item={childItem}
+                  itemPath={childItemPath}
+                  handleFileDelete={handleFileDelete}
+                />
+              );
+            }
+          })}
+        </ul>
       )}
     </li>
   );
