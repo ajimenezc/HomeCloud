@@ -4,6 +4,17 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faDownload, faTrash } from '@fortawesome/free-solid-svg-icons';
 
 const FileItem = ({ item, itemPath, handleFileDelete }) => {
+  // New function to handle file deletion with confirmation
+  const confirmDeleteFile = (e) => {
+    e.stopPropagation();
+    const confirm = window.confirm(
+      `Are you sure you want to delete the file "${item.name}"? This action cannot be undone.`
+    );
+    if (confirm) {
+      handleFileDelete(itemPath);
+    }
+  };
+
   return (
     <li key={itemPath} className="fileItem">
       <div className="previewBlock">
@@ -28,7 +39,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
           </a>
           <button
             className="iconButton deleteButton"
-            onClick={() => handleFileDelete(itemPath)}
+            onClick={confirmDeleteFile} // Use the confirmation handler
           >
             <FontAwesomeIcon icon={faTrash} />
           </button>

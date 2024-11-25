@@ -45,6 +45,9 @@ const Folder = ({
   const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
 
+  // States for selected files
+  const [selectedFiles, setSelectedFiles] = useState([]);
+
   // States for creating a new folder
   const [isCreatingFolder, setIsCreatingFolder] = useState(false);
   const [newFolderName, setNewFolderName] = useState('');
@@ -55,12 +58,27 @@ const Folder = ({
     fileInputRef.current.click();
   };
 
+  const handleFileChange = (e) => {
+    setSelectedFiles(Array.from(e.target.files));
+  };
+
   const handleUploadSubmit = (e) => {
     e.preventDefault();
-    const files = fileInputRef.current.files;
-    uploadFilesToFolder(itemPath, files, setUploadMessage, setUploadError, setUploadProgress);
-    // Clear the file input after submission
-    fileInputRef.current.value = '';
+    if (selectedFiles.length === 0) return;
+
+    uploadFilesToFolder(
+      itemPath,
+      selectedFiles,
+      setUploadMessage,
+      setUploadError,
+      setUploadProgress
+    );
+    // Clear the selected files after submission
+    setSelectedFiles([]);
+    // Also, clear the file input value
+    if (fileInputRef.current) {
+      fileInputRef.current.value = '';
+    }
   };
 
   const handleCreateFolderClick = () => {
@@ -79,6 +97,17 @@ const Folder = ({
     setNewFolderName('');
     setCreateFolderMessage('');
     setCreateFolderError('');
+  };
+
+  // New function to handle folder deletion with confirmation
+  const confirmDeleteFolder = (e) => {
+    e.stopPropagation();
+    const confirm = window.confirm(
+      `Are you sure you want to delete the folder "${item.name}"? This action cannot be undone.`
+    );
+    if (confirm) {
+      handleDeleteFolder(itemPath);
+    }
   };
 
   return (
@@ -101,10 +130,7 @@ const Folder = ({
           <div className="actionButtons" onClick={(e) => e.stopPropagation()}>
             <button
               className="iconButton deleteButton"
-              onClick={(e) => {
-                e.stopPropagation();
-                handleDeleteFolder(itemPath);
-              }}
+              onClick={confirmDeleteFolder} // Use the confirmation handler
             >
               <FontAwesomeIcon icon={faTrash} />
             </button>
@@ -122,9 +148,7 @@ const Folder = ({
               multiple
               ref={fileInputRef}
               style={{ display: 'none' }}
-              onChange={(e) => {
-                // Optionally handle file selection changes
-              }}
+              onChange={handleFileChange} // Attach the handler
             />
 
             {/* Select Files Button */}
@@ -132,12 +156,19 @@ const Folder = ({
               <FontAwesomeIcon icon={faFileText} /> Select Files
             </button>
 
+            {/* Display Selected Files Count */}
+            {selectedFiles.length > 0 && (
+              <span className="selectedFilesCount">
+                {selectedFiles.length} file{selectedFiles.length > 1 ? 's' : ''} selected
+              </span>
+            )}
+
             {/* Upload Files Button */}
             <button
               type="button"
               className="button"
               onClick={handleUploadSubmit}
-              disabled={uploadProgress > 0}
+              disabled={selectedFiles.length === 0 || uploadProgress > 0}
             >
               <FontAwesomeIcon icon={faUpload} /> Upload Files
             </button>
