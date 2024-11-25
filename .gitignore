@@ -38,3 +38,4 @@ uploads/
 *.tgz
 
 package-lock.json
+frontend/build/

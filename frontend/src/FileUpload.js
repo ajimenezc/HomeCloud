@@ -21,7 +21,7 @@ const FileUpload = () => {
 
     const fetchFiles = async () => {
         try {
-            const response = await fetch('http://mac-mini-de-andres.local:3001/files/list');
+            const response = await fetch('http://192.168.1.99:3001/files/list');
             if (!response.ok) {
                 throw new Error('Failed to fetch files');
             }
@@ -42,7 +42,7 @@ const FileUpload = () => {
         }
 
         try {
-            const response = await fetch('http://mac-mini-de-andres.local:3001/files/create-folder', {
+            const response = await fetch('http://192.168.1.99:3001/files/create-folder', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -78,7 +78,7 @@ const FileUpload = () => {
 
         const xhr = new XMLHttpRequest();
 
-        const uploadUrl = `http://mac-mini-de-andres.local:3001/files/upload?folderPath=${encodeURIComponent(
+        const uploadUrl = `http://192.168.1.99:3001/files/upload?folderPath=${encodeURIComponent(
             folderPath
         )}`;
 
@@ -115,7 +115,7 @@ const FileUpload = () => {
 
     const handleFileDelete = async (filePath) => {
         try {
-            const response = await fetch(`http://mac-mini-de-andres.local:3001/files/delete/${filePath}`, {
+            const response = await fetch(`http://192.168.1.99:3001/files/delete/${filePath}`, {
                 method: 'DELETE',
             });
 
@@ -135,7 +135,7 @@ const FileUpload = () => {
 
     const handleDeleteFolder = async (folderPath) => {
         try {
-            const response = await fetch('http://mac-mini-de-andres.local:3001/files/delete-folder', {
+            const response = await fetch('http://192.168.1.99:3001/files/delete-folder', {
                 method: 'DELETE',
                 headers: {
                     'Content-Type': 'application/json',

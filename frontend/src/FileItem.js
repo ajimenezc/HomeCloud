@@ -17,10 +17,12 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
 
   return (
     <li key={itemPath} className="fileItem">
+      
+      <div className="textBlock">
       <div className="previewBlock">
         {item.name.match(/\.(jpeg|jpg|png|gif)$/i) ? (
           <img
-            src={`http://mac-mini-de-andres.local:3001/uploads/${itemPath}`}
+            src={`http://192.168.1.99:3001/uploads/${itemPath}`}
             alt={item.name}
             className="filePreview"
           />
@@ -28,11 +30,12 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
           <FontAwesomeIcon icon={faFile} />
         )}
       </div>
-      <div className="textBlock">
-        <span className="fileName">{item.name}</span>
+        <span className="fileName">
+          {item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}
+        </span>        
         <div className="actionButtons">
           <a
-            href={`http://mac-mini-de-andres.local:3001/files/download/${itemPath}`}
+            href={`http://192.168.1.99:3001/files/download/${itemPath}`}
             className="iconButton"
           >
             <FontAwesomeIcon icon={faDownload} />
