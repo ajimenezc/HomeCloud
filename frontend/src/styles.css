@@ -1,300 +1,340 @@
 /* General Container Styling */
 .container {
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    font-family: Arial, sans-serif;
-    background-color: #f9f9f9;
-    border-radius: 10px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+/* Header Styling */
+.header {
+  text-align: center;
+  margin-bottom: 20px;
+  color: #333;
+  font-size: 1.8rem;
+  font-weight: bold;
+}
+
+/* Form Styling */
+.form {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.folderInput,
+.fileInput {
+  font-size: 16px;
+  padding: 8px 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  flex-grow: 1;
+}
+
+.folderInput::placeholder {
+  color: #aaa;
+}
+
+.button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 15px;
+  border-radius: 5px;
+  cursor: pointer;
+  font-size: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+}
+
+.button:hover {
+  background-color: #0056b3;
+}
+
+/* Cancel Button Styling */
+.cancelButton {
+  background-color: #f44336;
+}
+
+.cancelButton:hover {
+  background-color: #e53935;
+}
+
+/* Upload Controls Styling */
+.uploadControls {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+/* Create Folder Form Styling */
+.createFolderForm {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.createFolderForm .folderInput {
+  flex: 1;
+  padding: 6px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+/* Progress Bar Styling */
+.progressBarContainer {
+  width: 100%;
+  margin: 10px 0;
+}
+
+.progressBar {
+  width: 100%;
+  height: 10px;
+  background-color: #e0e0e0;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.progressFill {
+  height: 100%;
+  background-color: #007bff;
+  transition: width 0.2s ease;
+}
+
+/* Messages */
+.successMessage {
+  color: green;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+.errorMessage {
+  color: red;
+  text-align: center;
+  margin-bottom: 10px;
+}
+
+/* File Tree Styling */
+.fileList {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}
+
+.fileItem {
+  margin-bottom: 5px;
+  margin-left: 20px;
+}
+
+.folderBlock,
+.previewBlock,
+.textBlock {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 5px;
+}
+
+.folderBlock {
+  cursor: pointer;
+  position: relative;
+}
+
+.folderBlock:hover {
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+
+/* Highlight Selected Folder */
+.selectedFolder {
+  background-color: #d0e7ff; /* Changed to a more noticeable blue shade */
+  border-left: 5px solid #007bff; /* Added a blue left border */
+  border-radius: 5px;
+}
+
+.selectedFolder .folderName {
+  font-weight: bold;
+  color: #007bff; /* Blue text color for selected folder name */
+}
+
+.selectedFolder .folderIcon {
+  color: #007bff; /* Blue folder icon for selected folder */
+}
+
+/* Folder Name Styling */
+.folderName {
+  cursor: pointer;
+  color: #333;
+}
+
+.folderName:hover {
+  text-decoration: underline;
+}
+
+/* Collapse Button Styling */
+.collapseButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-right: 5px;
+  display: flex;
+  align-items: center;
+  padding: 0;
+}
+
+.collapseButton:focus {
+  outline: none;
+}
+
+.collapseButton svg {
+  width: 12px;
+  height: 12px;
+  color: #333;
+}
+
+.collapseButton:hover svg {
+  color: #007bff;
+}
+
+/* Folder Icon Styling */
+.folderBlock .fa-folder,
+.folderBlock .fa-folder-open {
+  color: #f4b400;
+  font-size: 18px;
+}
+
+.folderIcon {
+  color: #f4b400;
+}
+
+.folderBlock:hover .folderIcon {
+  color: #e0a800;
+}
+
+/* Prevent child elements from triggering parent click */
+.folderBlock .actionButtons,
+.folderBlock .collapseButton {
+  pointer-events: all;
+}
+
+/* File Icon and Preview Styling */
+.fileIcon {
+  font-size: 18px;
+  color: #007bff;
+}
+
+.filePreview {
+  width: 40px;
+  height: 40px;
+  object-fit: cover;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+/* Text Block Styling */
+.textBlock {
+  flex-grow: 1;
+}
+
+.fileName {
+  font-size: 14px;
+  color: #555;
+}
+
+/* Action Buttons */
+.actionButtons {
+  display: flex;
+  gap: 10px;
+  margin-left: auto;
+}
+
+.iconButton {
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: #007bff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconButton:hover {
+  color: #0056b3;
+}
+
+.iconButton:focus {
+  outline: none;
+}
+
+.deleteButton {
+  color: #ff4d4d;
+}
+
+.deleteButton:hover {
+  color: #ff1a1a;
+}
+
+/* Adjustments for Nested Lists */
+.fileList > .fileItem {
+  margin-left: 0;
+}
+
+.fileList .fileList .fileItem {
+  margin-left: 20px;
+}
+
+/* Optional: Highlighting the Hovered Item */
+.fileItem:hover {
+  background-color: #f1f1f1;
+  border-radius: 5px;
+}
+
+/* Adjusting the Font Awesome Icons */
+.fa-file {
+  color: #007bff;
+  font-size: 18px;
+}
+
+/* Media Queries for Responsiveness */
+@media (max-width: 600px) {
+  .container {
+      padding: 15px;
   }
-  
-  /* Header Styling */
-  .header {
-    text-align: center;
-    margin-bottom: 20px;
-    color: #333;
-    font-size: 1.8rem;
-    font-weight: bold;
-  }
-  
-  /* Form Styling */
-  .form {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    gap: 10px;
-    margin-bottom: 20px;
-  }
-  
+
   .folderInput,
   .fileInput {
-    font-size: 16px;
-    padding: 8px 10px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    flex-grow: 1;
-  }
-  
-  .folderInput::placeholder {
-    color: #aaa;
-  }
-  
-  .button {
-    background-color: #007bff;
-    color: white;
-    border: none;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    font-size: 16px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 5px;
-  }
-  
-  .button:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Progress Bar Styling */
-  .progressBarContainer {
-    width: 100%;
-    margin: 10px 0;
-  }
-  
-  .progressBar {
-    width: 100%;
-    height: 10px;
-    background-color: #e0e0e0;
-    border-radius: 5px;
-    overflow: hidden;
-  }
-  
-  .progressFill {
-    height: 100%;
-    background-color: #007bff;
-    transition: width 0.2s ease;
-  }
-  
-  /* Messages */
-  .successMessage {
-    color: green;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  
-  .errorMessage {
-    color: red;
-    text-align: center;
-    margin-bottom: 10px;
-  }
-  
-  /* File Tree Styling */
-  .fileList {
-    list-style-type: none;
-    padding-left: 0;
-    margin: 0;
-  }
-  
-  .fileItem {
-    margin-bottom: 5px;
-    margin-left: 20px;
-  }
-  
-  .folderBlock,
-  .previewBlock,
-  .textBlock {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 5px;
-  }
-  
-  .folderBlock {
-    cursor: pointer;
-    position: relative;
-  }
-  
-  .folderBlock:hover {
-    background-color: #f1f1f1;
-    border-radius: 5px;
-  }
-  
-  /* Highlight Selected Folder */
-  .selectedFolder {
-    background-color: #d0e7ff; /* Changed to a more noticeable blue shade */
-    border-left: 5px solid #007bff; /* Added a blue left border */
-    border-radius: 5px;
-  }
-  
-  .selectedFolder .folderName {
-    font-weight: bold;
-    color: #007bff; /* Blue text color for selected folder name */
-  }
-  
-  .selectedFolder .folderIcon {
-    color: #007bff; /* Blue folder icon for selected folder */
-  }
-  
-  /* Folder Name Styling */
-  .folderName {
-    cursor: pointer;
-    color: #333;
-  }
-  
-  .folderName:hover {
-    text-decoration: underline;
-  }
-  
-  /* Collapse Button Styling */
-  .collapseButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    margin-right: 5px;
-    display: flex;
-    align-items: center;
-    padding: 0;
-  }
-  
-  .collapseButton:focus {
-    outline: none;
-  }
-  
-  .collapseButton svg {
-    width: 12px;
-    height: 12px;
-    color: #333;
-  }
-  
-  .collapseButton:hover svg {
-    color: #007bff;
-  }
-  
-  /* Folder Icon Styling */
-  .folderBlock .fa-folder,
-  .folderBlock .fa-folder-open {
-    color: #f4b400;
-    font-size: 18px;
-  }
-  
-  .folderIcon {
-    color: #f4b400;
-  }
-  
-  .folderBlock:hover .folderIcon {
-    color: #e0a800;
-  }
-  
-  /* Prevent child elements from triggering parent click */
-  .folderBlock .actionButtons,
-  .folderBlock .collapseButton {
-    pointer-events: all;
-  }
-  
-  /* File Icon and Preview Styling */
-  .fileIcon {
-    font-size: 18px;
-    color: #007bff;
-  }
-  
-  .filePreview {
-    width: 40px;
-    height: 40px;
-    object-fit: cover;
-    border-radius: 5px;
-    border: 1px solid #ddd;
-  }
-  
-  /* Text Block Styling */
-  .textBlock {
-    flex-grow: 1;
-  }
-  
-  .fileName {
-    font-size: 14px;
-    color: #555;
-  }
-  
-  /* Action Buttons */
-  .actionButtons {
-    display: flex;
-    gap: 10px;
-    margin-left: auto;
-  }
-  
-  .iconButton {
-    background: none;
-    border: none;
-    cursor: pointer;
-    font-size: 16px;
-    color: #007bff;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .iconButton:hover {
-    color: #0056b3;
-  }
-  
-  .iconButton:focus {
-    outline: none;
-  }
-  
-  .deleteButton {
-    color: #ff4d4d;
-  }
-  
-  .deleteButton:hover {
-    color: #ff1a1a;
-  }
-  
-  /* Adjustments for Nested Lists */
-  .fileList > .fileItem {
-    margin-left: 0;
-  }
-  
-  .fileList .fileList .fileItem {
-    margin-left: 20px;
-  }
-  
-  /* Optional: Highlighting the Hovered Item */
-  .fileItem:hover {
-    background-color: #f1f1f1;
-    border-radius: 5px;
-  }
-  
-  /* Adjusting the Font Awesome Icons */
-  .fa-file {
-    color: #007bff;
-    font-size: 18px;
-  }
-  
-  /* Media Queries for Responsiveness */
-  @media (max-width: 600px) {
-    .container {
-      padding: 15px;
-    }
-  
-    .folderInput,
-    .fileInput {
       font-size: 14px;
-    }
-  
-    .button {
+  }
+
+  .button {
       font-size: 14px;
       padding: 6px 12px;
-    }
-  
-    .actionButtons {
-      gap: 5px;
-    }
-  
-    .iconButton {
-      font-size: 14px;
-    }
   }
-  
+
+  .uploadControls {
+      flex-direction: column;
+      align-items: stretch;
+  }
+
+  .uploadControls .button {
+      width: 100%;
+  }
+
+  .actionButtons {
+      gap: 5px;
+  }
+
+  .iconButton {
+      font-size: 14px;
+  }
+}

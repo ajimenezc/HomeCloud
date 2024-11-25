@@ -9,6 +9,8 @@ const FileTree = ({
   handleDeleteFolder,
   onFolderSelect,
   selectedFolderPath,
+  uploadFilesToFolder, // Receive the upload function
+  handleCreateFolder, // Receive the create folder function
 }) => {
   const rootFolder = {
     name: 'Root',
@@ -25,6 +27,8 @@ const FileTree = ({
         handleDeleteFolder={handleDeleteFolder}
         onFolderSelect={onFolderSelect}
         selectedFolderPath={selectedFolderPath}
+        uploadFilesToFolder={uploadFilesToFolder} // Pass it down
+        handleCreateFolder={handleCreateFolder} // Pass it down
         isRoot={true}
       />
     </ul>

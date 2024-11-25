@@ -9,7 +9,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
       <div className="previewBlock">
         {item.name.match(/\.(jpeg|jpg|png|gif)$/i) ? (
           <img
-            src={`http://192.168.1.37:3001/uploads/${itemPath}`}
+            src={`http://mac-mini-de-andres.local:3001/uploads/${itemPath}`}
             alt={item.name}
             className="filePreview"
           />
@@ -21,7 +21,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
         <span className="fileName">{item.name}</span>
         <div className="actionButtons">
           <a
-            href={`http://192.168.1.37:3001/files/download/${itemPath}`}
+            href={`http://mac-mini-de-andres.local:3001/files/download/${itemPath}`}
             className="iconButton"
           >
             <FontAwesomeIcon icon={faDownload} />
