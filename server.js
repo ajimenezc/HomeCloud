@@ -1,9 +1,13 @@
 // server.js
 import app from './app/app.js';
+import dotenv from 'dotenv';
 
-const port = 3001; // Define the port
+
+const PORT = process.env.PORT || 3001;
+const HOST = process.env.HOST || '0.0.0.0'; // Bind to all network interfaces
+
 
 // Start the server
-app.listen(port, () => {
-    console.log(`Server is running on http://localhost:${port}`);
-});
+app.listen(PORT, HOST, () => {
+    console.log(`Server is running on http://${HOST}:${PORT}`);
+  });

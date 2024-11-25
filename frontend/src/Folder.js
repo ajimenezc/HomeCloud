@@ -153,7 +153,7 @@ const Folder = ({
 
             {/* Select Files Button */}
             <button type="button" className="button" onClick={handleUploadClick}>
-              <FontAwesomeIcon icon={faFileText} /> Select Files
+              <FontAwesomeIcon icon={faFileText} /> Select
             </button>
 
             {/* Display Selected Files Count */}
@@ -170,12 +170,12 @@ const Folder = ({
               onClick={handleUploadSubmit}
               disabled={selectedFiles.length === 0 || uploadProgress > 0}
             >
-              <FontAwesomeIcon icon={faUpload} /> Upload Files
+              <FontAwesomeIcon icon={faUpload} /> Upload
             </button>
 
             {/* Create New Folder Button */}
             <button type="button" className="button" onClick={handleCreateFolderClick}>
-              <FontAwesomeIcon icon={faPlus} /> New Folder
+              <FontAwesomeIcon icon={faPlus} /> New
             </button>
           </div>
 
