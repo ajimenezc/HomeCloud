@@ -1,48 +1,91 @@
-/* General Container Styling */
+/* styles.css */
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background-color: var(--background-color);
+  color: var(--text-color);
+  transition: background-color 0.3s ease, color 0.3s ease;
+  font-family: Arial, sans-serif; /* Move font-family here for global styling */
+}
+
+
+/* Default Light Theme Variables */
+:root {
+  --background-color: #f9f9f9;
+  --header-color: #333;
+  --text-color: #555;
+  --border-color: #ccc;
+  --button-bg-color: #007bff;
+  --button-hover-bg-color: #0056b3;
+  --button-text-color: #fff;
+  --success-color: green;
+  --error-color: red;
+  --modal-background: #fff;
+  --overlay-background: rgba(0, 0, 0, 0.75);
+  --file-item-hover: #f1f1f1;
+  --selected-folder-bg: #d0e7ff;
+  --selected-folder-border: #007bff;
+  /* Add more variables as needed */
+}
+
+/* Dark Theme Variables */
+.dark-theme {
+  --background-color: #1e1e1e;
+  --header-color: #f1f1f1;
+  --text-color: #d4d4d4;
+  --border-color: #555;
+  --button-bg-color: #444;
+  --button-hover-bg-color: #666;
+  --button-text-color: #fff;
+  --success-color: #66ff66;
+  --error-color: #ff6666;
+  --modal-background: #2e2e2e;
+  --overlay-background: rgba(0, 0, 0, 0.85);
+  --file-item-hover: #333333;
+  --selected-folder-bg: #3a3a3a;
+  --selected-folder-border: #66b2ff;
+  /* Add more variables as needed */
+}
+
+
+/* Apply background and text colors based on theme */
 .container {
   max-width: 800px;
   margin: 0 auto;
   padding: 20px;
   font-family: Arial, sans-serif;
-  background-color: #f9f9f9;
+  background-color: var(--background-color);
   border-radius: 10px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
 /* Header Styling */
 .header {
   text-align: center;
   margin-bottom: 20px;
-  color: #333;
+  color: var(--header-color);
   font-size: 1.8rem;
   font-weight: bold;
 }
 
-/* Form Styling */
-.form {
+/* Header Container to align header and toggle button */
+.headerContainer {
   display: flex;
-  justify-content: center;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
 }
 
-.folderInput,
-.fileInput {
-  font-size: 16px;
-  padding: 8px 10px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  flex-grow: 1;
-}
-
-.folderInput::placeholder {
-  color: #aaa;
-}
-
-.button {
-  background-color: #007bff;
-  color: white;
+/* Button Styling */
+.button,
+.themeToggleButton {
+  background-color: var(--button-bg-color);
+  color: var(--button-text-color);
   border: none;
   padding: 8px 15px;
   border-radius: 5px;
@@ -52,15 +95,28 @@
   align-items: center;
   justify-content: center;
   gap: 5px;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.button:hover {
-  background-color: #0056b3;
+.button:hover,
+.themeToggleButton:hover {
+  background-color: var(--button-hover-bg-color);
+}
+
+/* Theme Toggle Button Specific Styling */
+.themeToggleButton {
+  background: none;
+  font-size: 1.5rem;
+  color: #444
+}
+
+.themeToggleButton:hover {
+  color: var(--button-hover-bg-color);
 }
 
 /* Cancel Button Styling */
 .cancelButton {
-  background-color: #f44336;
+  background-color: #f44336; /* You might want to define a variable for this as well */
 }
 
 .cancelButton:hover {
@@ -86,8 +142,10 @@
 .createFolderForm .folderInput {
   flex: 1;
   padding: 6px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--border-color);
   border-radius: 4px;
+  background-color: var(--background-color);
+  color: var(--text-color);
 }
 
 /* Progress Bar Styling */
@@ -99,26 +157,26 @@
 .progressBar {
   width: 100%;
   height: 10px;
-  background-color: #e0e0e0;
+  background-color: var(--border-color);
   border-radius: 5px;
   overflow: hidden;
 }
 
 .progressFill {
   height: 100%;
-  background-color: #007bff;
+  background-color: var(--button-bg-color);
   transition: width 0.2s ease;
 }
 
 /* Messages */
 .successMessage {
-  color: green;
+  color: var(--success-color);
   text-align: center;
   margin-bottom: 10px;
 }
 
 .errorMessage {
-  color: red;
+  color: var(--error-color);
   text-align: center;
   margin-bottom: 10px;
 }
@@ -133,6 +191,12 @@
 .fileItem {
   margin-bottom: 5px;
   margin-left: 20px;
+  transition: background-color 0.3s ease;
+}
+
+.fileItem:hover {
+  background-color: var(--file-item-hover);
+  border-radius: 5px;
 }
 
 .folderBlock,
@@ -150,30 +214,30 @@
 }
 
 .folderBlock:hover {
-  background-color: #f1f1f1;
+  background-color: var(--file-item-hover);
   border-radius: 5px;
 }
 
 /* Highlight Selected Folder */
 .selectedFolder {
-  background-color: #d0e7ff; /* Changed to a more noticeable blue shade */
-  border-left: 5px solid #007bff; /* Added a blue left border */
+  background-color: var(--selected-folder-bg);
+  border-left: 5px solid var(--selected-folder-border);
   border-radius: 5px;
 }
 
 .selectedFolder .folderName {
   font-weight: bold;
-  color: #007bff; /* Blue text color for selected folder name */
+  color: var(--selected-folder-border);
 }
 
 .selectedFolder .folderIcon {
-  color: #007bff; /* Blue folder icon for selected folder */
+  color: var(--selected-folder-border);
 }
 
 /* Folder Name Styling */
 .folderName {
   cursor: pointer;
-  color: #333;
+  color: var(--text-color);
 }
 
 .folderName:hover {
@@ -198,11 +262,11 @@
 .collapseButton svg {
   width: 12px;
   height: 12px;
-  color: #333;
+  color: var(--text-color);
 }
 
 .collapseButton:hover svg {
-  color: #007bff;
+  color: var(--button-hover-bg-color);
 }
 
 /* Folder Icon Styling */
@@ -247,7 +311,7 @@
 
 .fileName {
   font-size: 14px;
-  color: #555;
+  color: var(--text-color);
 }
 
 /* Action Buttons */
@@ -266,10 +330,11 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: color 0.3s ease;
 }
 
 .iconButton:hover {
-  color: #0056b3;
+  color: var(--button-hover-bg-color);
 }
 
 .iconButton:focus {
@@ -295,7 +360,7 @@
 
 /* Optional: Highlighting the Hovered Item */
 .fileItem:hover {
-  background-color: #f1f1f1;
+  background-color: var(--file-item-hover);
   border-radius: 5px;
 }
 
@@ -303,6 +368,76 @@
 .fa-file {
   color: #007bff;
   font-size: 18px;
+}
+
+/* Modal overlay */
+.overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: var(--overlay-background);
+  z-index: 1000;
+}
+
+/* Modal content */
+.modal {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  right: auto;
+  bottom: auto;
+  transform: translate(-50%, -50%);
+  background: var(--modal-background);
+  padding: 20px;
+  max-width: 80%;
+  max-height: 80%;
+  overflow: auto;
+  border-radius: 8px;
+  box-shadow: 0 5px 15px rgba(0,0,0,.5);
+  transition: background 0.3s ease;
+}
+
+/* Modal header */
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+/* Close button */
+.closeButton {
+  background: transparent;
+  border: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: var(--text-color);
+}
+
+.closeButton:hover {
+  color: var(--button-hover-bg-color);
+}
+
+/* Modal content styling */
+.modalContent img.modalImage {
+  max-width: 100%;
+  height: auto;
+}
+
+.modalContent iframe.modalIframe {
+  width: 100%;
+  height: 80vh;
+  border: none;
+}
+
+.modalContent ul {
+  list-style: none;
+  padding: 0;
+}
+
+.modalContent li {
+  margin-bottom: 10px;
 }
 
 /* Media Queries for Responsiveness */
@@ -316,7 +451,8 @@
       font-size: 14px;
   }
 
-  .button {
+  .button,
+  .themeToggleButton {
       font-size: 14px;
       padding: 6px 12px;
   }

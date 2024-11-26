@@ -64,7 +64,12 @@ const Folder = ({
 
   const handleUploadSubmit = (e) => {
     e.preventDefault();
-    if (selectedFiles.length === 0) return;
+    if (selectedFiles.length === 0) {
+      window.alert(
+        `Select files to upload`
+      );
+      return;
+    }
 
     uploadFilesToFolder(
       itemPath,
@@ -116,11 +121,11 @@ const Folder = ({
         className={`folderBlock ${isSelected ? 'selectedFolder' : ''}`}
         onClick={handleFolderClick}
       >
-        {item.children && item.children.length > 0 && (
+        
           <button onClick={toggleCollapse} className="collapseButton">
             <FontAwesomeIcon icon={collapsed ? faChevronRight : faChevronDown} />
           </button>
-        )}
+        
         <FontAwesomeIcon
           icon={collapsed ? faFolder : faFolderOpen}
           className="folderIcon"
@@ -168,7 +173,7 @@ const Folder = ({
               type="button"
               className="button"
               onClick={handleUploadSubmit}
-              disabled={selectedFiles.length === 0 || uploadProgress > 0}
+              // disabled={selectedFiles.length === 0 || uploadProgress > 0}
             >
               <FontAwesomeIcon icon={faUpload} /> Upload
             </button>

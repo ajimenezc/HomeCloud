@@ -1,6 +1,6 @@
 // FileUpload.js
 import React, { useState, useEffect } from 'react';
-import { faFolderPlus } from '@fortawesome/free-solid-svg-icons';
+import { faSun, faMoon } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import FileTree from './FileTree'; 
 import { joinPaths } from './utils.js';
@@ -12,9 +12,37 @@ const FileUpload = () => {
     const [fileTree, setFileTree] = useState([]);
     const [selectedFolderPath, setSelectedFolderPath] = useState(''); // For highlighting
 
-    // Reusable states and functions for folder creation can be handled within Folder component
+    // Theme state
+    const [isDarkTheme, setIsDarkTheme] = useState(true);
 
-    // Fetch files when the component mounts
+    // Persist and apply theme on initial load
+    useEffect(() => {
+        const savedTheme = localStorage.getItem('isDarkTheme');
+        if (savedTheme !== null) {
+            setIsDarkTheme(JSON.parse(savedTheme));
+        }
+    }, []);
+
+    // Apply theme class to body
+    useEffect(() => {
+        if (isDarkTheme) {
+            document.body.classList.add('dark-theme');
+            document.body.classList.remove('light-theme');
+        } else {
+            document.body.classList.add('light-theme');
+            document.body.classList.remove('dark-theme');
+        }
+    }, [isDarkTheme]);
+
+    // Persist theme preference
+    useEffect(() => {
+        localStorage.setItem('isDarkTheme', JSON.stringify(isDarkTheme));
+    }, [isDarkTheme]);
+
+    const toggleTheme = () => {
+        setIsDarkTheme(prevTheme => !prevTheme);
+    };
+
     useEffect(() => {
         fetchFiles();
     }, []);
@@ -159,9 +187,13 @@ const FileUpload = () => {
     };
 
     return (
-        <div className="container">
-            <h1 className="header">File Manager</h1>
-            {/* Removed the global upload form as per previous instructions */}
+        <div className={`container ${isDarkTheme ? 'dark-theme' : 'light-theme'}`}>
+            <header className="headerContainer">
+                <h1 className="header">File Manager</h1>
+                <button className="themeToggleButton" onClick={toggleTheme} aria-label="Toggle Theme">
+                    <FontAwesomeIcon icon={isDarkTheme ? faSun : faMoon} />
+                </button>
+            </header>
 
             {/* Progress bar */}
             <div className="progressBarContainer">
