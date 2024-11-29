@@ -33,7 +33,7 @@ const upload = multer({ storage });
 router.post('/upload', upload.any(), uploadFiles);
 
 // Route to download a file
-router.get('/download/:filename', downloadFile);
+router.get('/download/*', downloadFile);
 
 // Route to list files
 router.get('/list', listFiles);

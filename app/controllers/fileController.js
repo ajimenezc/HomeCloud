@@ -2,6 +2,7 @@
 import fs from 'fs';
 import { getFilePath, getUploadsDirectory } from '../utils.js';
 import { joinPaths, sanitizePath } from '../utils.js';
+import path from 'path';
 
 
 
@@ -19,12 +20,17 @@ export const uploadFiles = (req, res) => {
   };
   
 
-// Handle file download
 export const downloadFile = (req, res) => {
-    const { filename } = req.params;
-    const filePath = getFilePath(filename);
+    const relativePath = req.params[0];
+    const sanitizedPath = path.normalize(relativePath).replace(/^(\.\.[\/\\])+/, '');
+    const filePath = path.join(getUploadsDirectory(), sanitizedPath);
 
-    // Check if file exists
+    // Verify that the file is within the uploads directory
+    if (!filePath.startsWith(getUploadsDirectory())) {
+        return res.status(400).send('Invalid file path');
+    }
+
+    // Check if the file exists
     if (!fs.existsSync(filePath)) {
         console.error(`File not found: ${filePath}`);
         return res.status(404).send('File not found.');
@@ -33,19 +39,12 @@ export const downloadFile = (req, res) => {
     // Attempt to send the file
     res.download(filePath, (err) => {
         if (err) {
-            if (err.code === 'ECONNRESET' || err.code === 'EPIPE') {
-                // Suppress expected errors when the client aborts the connection
-                // console.debug(`Download aborted by client: ${filename}`);
-            } else {
-                console.error(`Error downloading file: ${err.message}`);
-                if (!res.headersSent) {
-                    res.status(500).send('Error downloading the file.');
-                }
-            }
+            console.error(`Error downloading file: ${err.message}`);
+            res.status(500).send('Error downloading the file.');
         }
     });
-    
 };
+
 
 export const listFiles = (req, res) => {
     const uploadsDir = getUploadsDirectory(); // Use your utility function
