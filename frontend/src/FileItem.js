@@ -1,4 +1,3 @@
-// FileItem.js
 import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faDownload, faTrash, faEye, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
@@ -45,7 +44,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
   };
 
   // Determine if the file is previewable
-  const isPreviewable = item.name.match(/\.(jpeg|jpg|png|gif|pdf|txt|docx?)$/i);
+  const isPreviewable = item.name.match(/\.(jpeg|jpg|png|gif|pdf|txt|docx?|mp4)$/i);
 
   // Construct the file URL
   const fileUrl = `http://192.168.1.99:3001/uploads/${itemPath}`;
@@ -85,7 +84,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
           </a>
           <button
             className="iconButton deleteButton"
-            onClick={confirmDeleteFile} // Use the confirmation handler
+            onClick={confirmDeleteFile}
             title="Delete"
           >
             <FontAwesomeIcon icon={faTrash} />
@@ -111,6 +110,10 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
           <div className="modalContent">
             {item.name.match(/\.(jpeg|jpg|png|gif)$/i) ? (
               <img src={fileUrl} alt={item.name} className="modalImage" />
+            ) : item.name.match(/\.mp4$/i) ? (
+              <video controls src={fileUrl} className="modalVideo">
+                Your browser does not support the video tag.
+              </video>
             ) : item.name.match(/\.pdf$/i) ? (
               <iframe src={fileUrl} title={item.name} className="modalIframe"></iframe>
             ) : (
