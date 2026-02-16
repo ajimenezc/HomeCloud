@@ -1,55 +1,121 @@
-# File Management System
+# HomeCloud - Personal File Manager & Cloud Clipboard
 
-A full-stack file management system built with Node.js, Express, and React. This application allows users to upload, download, preview, and manage files and folders. It supports various file types, including images, videos, documents, and more.
-
-## Table of Contents
-
-- [Features](#features)
-- [Prerequisites](#prerequisites)
-- [Installation](#installation)
-- [Backend Setup](#backend-setup)
-- [Frontend Setup](#frontend-setup)
-- [Running the Application](#running-the-application)
-- [Project Structure](#project-structure)
-- [API Endpoints](#api-endpoints)
-- [Frontend Components](#frontend-components)
-- [Troubleshooting](#troubleshooting)
-- [Security Considerations](#security-considerations)
-- [License](#license)
-
----
+A full-stack file management system built with Node.js, Express, and React, designed to run on your home network. Upload, download, preview, and manage files from any device on your LAN. Includes a shared cloud clipboard for copying text between devices.
 
 ## Features
 
-- **File Upload**: Upload multiple files to the server with support for large files.
-- **File Download**: Download files from the server.
-- **File Preview**: Preview images, videos (including `.mp4`), PDFs, and more directly in the browser.
-- **File Deletion**: Delete files from the server.
-- **Folder Management**: Create and delete folders on the server.
-- **File Listing**: List all files and folders in a hierarchical structure.
-- **Responsive UI**: User-friendly interface built with React and styled for a pleasant user experience.
-- **Error Handling**: Graceful error handling with informative messages.
-- **Cross-Origin Support**: Configured CORS to allow requests from different origins.
-
----
+- **File Upload**: Upload multiple files with progress tracking
+- **File Download**: Download files from any device on the network
+- **File Preview**: Preview images, videos (`.mp4`, `.mov`), PDFs, and documents directly in the browser
+- **File Deletion**: Delete files and folders
+- **Folder Management**: Create and navigate folders in a tree structure
+- **Cloud Clipboard**: Share text between devices on your network
+- **Dark/Light Theme**: Toggle between themes with persistent preference
+- **Responsive UI**: Works on desktop and mobile browsers
 
 ## Prerequisites
 
-- **Node.js** (version 12 or higher)
-- **npm** or **yarn**
-- **Git** (for cloning the repository)
-
----
+- **Node.js** >= 16
+- **npm** >= 8
 
 ## Installation
 
-### Clone the Repository
+```bash
+git clone https://github.com/YOUR_USER/HomeCloud.git
+cd HomeCloud
+```
+
+### Backend
 
 ```bash
-git clone https://github.com/yourusername/file-management-system.git
-cd file-management-system
+npm install
+```
 
+Create a `.env` file in the root directory:
+
+```env
+UPLOAD_PATH=/path/to/your/uploads/folder
+HOST=0.0.0.0
+PORT=3001
+```
+
+### Frontend
+
+```bash
+cd frontend
+npm install
+```
+
+## Running the Application
+
+### Development
+
+```bash
+# Backend (from root)
+npm run dev
+
+# Frontend (from frontend/)
+cd frontend
+npm start
+```
+
+### Production with PM2
+
+```bash
 npm i -g pm2
-pm2 start "npm run start:backend"  --name nube-backend  --cwd /ruta/a/tu/app
-pm2 start "npm run start:frontend" --name nube-frontend --cwd /ruta/a/tu/app
-pm2 stop nube-frontend && pm2 delete nube-frontend
+pm2 start "npm start" --name homecloud-backend --cwd /path/to/HomeCloud
+pm2 start "npm start" --name homecloud-frontend --cwd /path/to/HomeCloud/frontend
+```
+
+Access the app from any device on your network at `http://<server-ip>:3000`.
+
+## Project Structure
+
+```
+HomeCloud/
+├── server.js                  # Entry point
+├── app/
+│   ├── app.js                 # Express app setup
+│   ├── utils.js               # Shared utilities
+│   ├── controllers/
+│   │   ├── fileController.js  # File operations (upload, download, list, delete)
+│   │   └── clipboardController.js  # Cloud clipboard read/write
+│   └── routes/
+│       ├── index.js           # Route aggregator
+│       ├── fileRoutes.js      # /files/* routes
+│       └── clipboardRoutes.js # /clipboard/* routes
+├── frontend/
+│   └── src/
+│       ├── App.js             # Root component
+│       ├── FileUpload.js      # Main file manager view
+│       ├── FileTree.js        # Folder tree navigation
+│       ├── FileItem.js        # File display with preview/download/delete
+│       ├── Folder.js          # Folder component
+│       ├── CloudClipboard.js  # Shared clipboard component
+│       └── styles.css
+└── .env                       # Environment config (not tracked)
+```
+
+## API Endpoints
+
+### Files
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/files/list` | List all files and folders |
+| POST | `/files/upload?folderPath=...` | Upload files to a folder |
+| GET | `/files/download/*` | Download a file |
+| DELETE | `/files/delete/:filename` | Delete a file |
+| POST | `/files/create-folder` | Create a new folder |
+| DELETE | `/files/delete-folder` | Delete a folder |
+
+### Clipboard
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/clipboard/get` | Get clipboard content |
+| POST | `/clipboard/set` | Update clipboard content |
+
+## License
+
+MIT
