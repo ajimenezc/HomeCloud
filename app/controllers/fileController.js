@@ -20,7 +20,7 @@ export const uploadFiles = (req, res) => {
   };
   
 
-export const downloadFile = (req, res) => {
+  export const downloadFile = (req, res) => {
     const relativePath = req.params[0];
     const sanitizedPath = path.normalize(relativePath).replace(/^(\.\.[\/\\])+/, '');
     const filePath = path.join(getUploadsDirectory(), sanitizedPath);
@@ -40,10 +40,15 @@ export const downloadFile = (req, res) => {
     res.download(filePath, (err) => {
         if (err) {
             console.error(`Error downloading file: ${err.message}`);
-            res.status(500).send('Error downloading the file.');
+            // Only send error response if headers haven't been sent
+            if (!res.headersSent) {
+                return res.status(500).send('Error downloading the file.');
+            }
+            // If headers are already sent, simply end the response
         }
     });
 };
+
 
 
 export const listFiles = (req, res) => {

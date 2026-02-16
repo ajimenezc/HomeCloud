@@ -44,7 +44,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
   };
 
   // Determine if the file is previewable
-  const isPreviewable = item.name.match(/\.(jpeg|jpg|png|gif|pdf|txt|docx?|mp4)$/i);
+  const isPreviewable = item.name.match(/\.(jpeg|jpg|png|gif|pdf|txt|docx?|mp4|mov)$/i);
 
   // Construct the file URL
   const fileUrl = `http://192.168.1.99:3001/uploads/${itemPath}`;
@@ -64,7 +64,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
           )}
         </div>
         <span className="fileName">
-          {item.name.length > 20 ? `${item.name.slice(0, 20)}...` : item.name}
+          {item.name.length > 20 ? `${item.name.slice(0, 40)}...` : item.name}
         </span>
         <div className="actionButtons">
           {isPreviewable && (
@@ -110,7 +110,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
           <div className="modalContent">
             {item.name.match(/\.(jpeg|jpg|png|gif)$/i) ? (
               <img src={fileUrl} alt={item.name} className="modalImage" />
-            ) : item.name.match(/\.mp4$/i) ? (
+            ) : item.name.match(/\.(mp4|mov)$/i) ? (
               <video controls src={fileUrl} className="modalVideo">
                 Your browser does not support the video tag.
               </video>

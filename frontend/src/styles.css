@@ -474,3 +474,44 @@ body {
       font-size: 14px;
   }
 }
+
+.cloudClipboard {
+  margin: 20px 0;
+  padding: 15px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.cloudClipboard h2 {
+  margin-bottom: 10px;
+}
+
+.cloudClipboard textarea {
+  width: 100%;
+  resize: none;
+  margin-bottom: 10px;
+}
+
+.cloudClipboard .buttonGroup {
+  display: flex;
+  gap: 10px;
+}
+
+.cloudClipboard button {
+  padding: 10px 15px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.cloudClipboard button:hover {
+  background-color: #0056b3;
+}
+
+.cloudClipboard p {
+  margin-top: 10px;
+  color: green;
+}
