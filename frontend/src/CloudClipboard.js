@@ -11,7 +11,7 @@ const CloudClipboard = () => {
 
     const fetchClipboardContent = async () => {
         try {
-            const response = await fetch('http://192.168.1.99:3001/clipboard/get');
+            const response = await fetch(`http://${window.location.hostname}:3001/clipboard/get`);
             if (!response.ok) {
                 throw new Error('Failed to fetch clipboard content');
             }
@@ -25,7 +25,7 @@ const CloudClipboard = () => {
 
     const updateClipboardContent = async () => {
         try {
-            const response = await fetch('http://192.168.1.99:3001/clipboard/set', {
+            const response = await fetch(`http://${window.location.hostname}:3001/clipboard/set`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

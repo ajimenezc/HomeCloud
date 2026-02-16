@@ -5,7 +5,6 @@ import path from 'path';
 import cors from 'cors';
 import { getUploadsDirectory } from './utils.js';
 console.log('UPLOAD_PATH:', getUploadsDirectory());
-// prints UPLOAD_PATH: /Users/andresjimenezcuenca/uploads
 const app = express();
 
 app.use(cors({

@@ -47,7 +47,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
   const isPreviewable = item.name.match(/\.(jpeg|jpg|png|gif|pdf|txt|docx?|mp4|mov)$/i);
 
   // Construct the file URL
-  const fileUrl = `http://192.168.1.99:3001/uploads/${itemPath}`;
+  const fileUrl = `http://${window.location.hostname}:3001/uploads/${itemPath}`;
 
   return (
     <li key={itemPath} className="fileItem">
@@ -76,7 +76,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
             <FontAwesomeIcon icon={faInfoCircle} />
           </button>
           <a
-            href={`http://192.168.1.99:3001/files/download/${itemPath}`}
+            href={`http://${window.location.hostname}:3001/files/download/${itemPath}`}
             className="iconButton"
             title="Download"
           >
