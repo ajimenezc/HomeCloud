@@ -56,7 +56,18 @@ if (existsSync(xcodeSwiftc)) {
 }
 execSync(`${swiftc} -o ${MACOS}/${APP_NAME} menubar.swift -framework Cocoa`, { stdio: 'inherit' });
 
-console.log('5. Creating Info.plist...');
+console.log('5. Generating app icon...');
+if (!existsSync(`${RESOURCES}/AppIcon.icns`)) {
+    execSync(`${swiftc} -o /tmp/generate_icon generate_icon.swift -framework Cocoa`, { stdio: 'inherit' });
+    execSync('/tmp/generate_icon', { stdio: 'inherit' });
+    execSync(`iconutil -c icns -o ${RESOURCES}/AppIcon.icns /tmp/HomeCloud.iconset`, { stdio: 'inherit' });
+    execSync('rm -rf /tmp/HomeCloud.iconset /tmp/generate_icon');
+    console.log('   App icon generated.');
+} else {
+    console.log('   App icon already exists, skipping.');
+}
+
+console.log('6. Creating Info.plist...');
 const plist = `<?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
@@ -77,6 +88,8 @@ const plist = `<?xml version="1.0" encoding="UTF-8"?>
     <string>APPL</string>
     <key>LSUIElement</key>
     <true/>
+    <key>CFBundleIconFile</key>
+    <string>AppIcon</string>
     <key>NSHighResolutionCapable</key>
     <true/>
 </dict>

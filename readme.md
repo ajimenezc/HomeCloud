@@ -59,6 +59,22 @@ cd frontend
 npm start
 ```
 
+### macOS App (menu bar)
+
+```bash
+# Install dependencies
+npm install
+cd frontend && npm install && npm run build && cd ..
+
+# Build the .app bundle (bundles backend with esbuild, compiles Swift, downloads Node, generates icon)
+node build.mjs
+
+# Run the app
+open release/HomeCloud.app
+```
+
+This creates `release/HomeCloud.app` — a standalone macOS app that runs in the menu bar. It bundles its own Node.js runtime, so no system Node is required to run it. Configuration (port, upload folder) can be changed from the menu bar icon.
+
 ### Production with PM2
 
 ```bash

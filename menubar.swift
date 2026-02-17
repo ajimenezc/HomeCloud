@@ -2,16 +2,18 @@ import Cocoa
 
 class AppDelegate: NSObject, NSApplicationDelegate {
     var statusItem: NSStatusItem!
-    let port: String
-    let uploadPath: String
+    var port: String
+    var uploadPath: String
     let pidFile: String
     let configDir: String
+    let configFile: String
     let resourcesDir: String
+    var headerItem: NSMenuItem!
 
     override init() {
         let home = FileManager.default.homeDirectoryForCurrentUser.path
         configDir = "\(home)/.homecloud"
-        let configFile = "\(configDir)/config.env"
+        configFile = "\(configDir)/config.env"
 
         // Create config dir
         try? FileManager.default.createDirectory(atPath: configDir, withIntermediateDirectories: true)
@@ -71,7 +73,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
 
         let menu = NSMenu()
 
-        let headerItem = NSMenuItem(title: "HomeCloud - puerto \(port)", action: nil, keyEquivalent: "")
+        headerItem = NSMenuItem(title: "HomeCloud - puerto \(port)", action: nil, keyEquivalent: "")
         headerItem.isEnabled = false
         menu.addItem(headerItem)
 
@@ -81,11 +83,21 @@ class AppDelegate: NSObject, NSApplicationDelegate {
         openItem.target = self
         menu.addItem(openItem)
 
+        menu.addItem(NSMenuItem.separator())
+
+        let changePortItem = NSMenuItem(title: "Cambiar puerto...", action: #selector(changePort), keyEquivalent: "")
+        changePortItem.target = self
+        menu.addItem(changePortItem)
+
+        let changeFolderItem = NSMenuItem(title: "Cambiar carpeta de uploads...", action: #selector(changeUploadFolder), keyEquivalent: "")
+        changeFolderItem.target = self
+        menu.addItem(changeFolderItem)
+
+        menu.addItem(NSMenuItem.separator())
+
         let restartItem = NSMenuItem(title: "Reiniciar servidor", action: #selector(restartServer), keyEquivalent: "r")
         restartItem.target = self
         menu.addItem(restartItem)
-
-        menu.addItem(NSMenuItem.separator())
 
         let quitItem = NSMenuItem(title: "Salir de HomeCloud", action: #selector(quitApp), keyEquivalent: "q")
         quitItem.target = self
@@ -106,6 +118,11 @@ class AppDelegate: NSObject, NSApplicationDelegate {
                 Thread.sleep(forTimeInterval: 0.5)
             }
         }
+    }
+
+    func saveConfig() {
+        let config = "UPLOAD_PATH=\(uploadPath)\nPORT=\(port)\n"
+        try? config.write(toFile: configFile, atomically: true, encoding: .utf8)
     }
 
     func startServer() {
@@ -140,6 +157,50 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     @objc func openBrowser() {
         if let url = URL(string: "http://localhost:\(port)") {
             NSWorkspace.shared.open(url)
+        }
+    }
+
+    @objc func changePort() {
+        let alert = NSAlert()
+        alert.messageText = "Cambiar puerto"
+        alert.informativeText = "Introduce el nuevo puerto para el servidor:"
+        alert.addButton(withTitle: "Guardar")
+        alert.addButton(withTitle: "Cancelar")
+
+        let input = NSTextField(frame: NSRect(x: 0, y: 0, width: 200, height: 24))
+        input.stringValue = port
+        alert.accessoryView = input
+
+        NSApp.activate(ignoringOtherApps: true)
+        let response = alert.runModal()
+        if response == .alertFirstButtonReturn {
+            let newPort = input.stringValue.trimmingCharacters(in: .whitespaces)
+            if !newPort.isEmpty && newPort != port {
+                port = newPort
+                saveConfig()
+                headerItem.title = "HomeCloud - puerto \(port)"
+                restartServer()
+            }
+        }
+    }
+
+    @objc func changeUploadFolder() {
+        let panel = NSOpenPanel()
+        panel.title = "Seleccionar carpeta de uploads"
+        panel.canChooseDirectories = true
+        panel.canChooseFiles = false
+        panel.canCreateDirectories = true
+        panel.directoryURL = URL(fileURLWithPath: uploadPath)
+
+        NSApp.activate(ignoringOtherApps: true)
+        let response = panel.runModal()
+        if response == .OK, let url = panel.url {
+            let newPath = url.path
+            if newPath != uploadPath {
+                uploadPath = newPath
+                saveConfig()
+                restartServer()
+            }
         }
     }
 
