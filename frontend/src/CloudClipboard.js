@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react';
+import { API_BASE } from './config.js';
 
 const CloudClipboard = () => {
     const [clipboardContent, setClipboardContent] = useState('');
@@ -11,7 +12,7 @@ const CloudClipboard = () => {
 
     const fetchClipboardContent = async () => {
         try {
-            const response = await fetch(`http://${window.location.hostname}:3001/clipboard/get`);
+            const response = await fetch(`${API_BASE}/clipboard/get`);
             if (!response.ok) {
                 throw new Error('Failed to fetch clipboard content');
             }
@@ -25,7 +26,7 @@ const CloudClipboard = () => {
 
     const updateClipboardContent = async () => {
         try {
-            const response = await fetch(`http://${window.location.hostname}:3001/clipboard/set`, {
+            const response = await fetch(`${API_BASE}/clipboard/set`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

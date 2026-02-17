@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faFile, faDownload, faTrash, faEye, faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import Modal from 'react-modal';
+import { API_BASE } from './config.js';
 
 // Ensure that the modal is attached to your app element (for accessibility)
 Modal.setAppElement('#root');
@@ -47,7 +48,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
   const isPreviewable = item.name.match(/\.(jpeg|jpg|png|gif|pdf|txt|docx?|mp4|mov)$/i);
 
   // Construct the file URL
-  const fileUrl = `http://${window.location.hostname}:3001/uploads/${itemPath}`;
+  const fileUrl = `${API_BASE}/uploads/${itemPath}`;
 
   return (
     <li key={itemPath} className="fileItem">
@@ -76,7 +77,7 @@ const FileItem = ({ item, itemPath, handleFileDelete }) => {
             <FontAwesomeIcon icon={faInfoCircle} />
           </button>
           <a
-            href={`http://${window.location.hostname}:3001/files/download/${itemPath}`}
+            href={`${API_BASE}/files/download/${itemPath}`}
             className="iconButton"
             title="Download"
           >

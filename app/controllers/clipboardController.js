@@ -1,7 +1,7 @@
 import fs from 'fs';
 import path from 'path';
 
-const clipboardFilePath = path.join(process.cwd(), 'clipboard.txt'); // File to store clipboard content
+const clipboardFilePath = path.join(process.env.APP_DATA_PATH || process.cwd(), 'clipboard.txt');
 
 // Ensure the clipboard file exists
 if (!fs.existsSync(clipboardFilePath)) {
